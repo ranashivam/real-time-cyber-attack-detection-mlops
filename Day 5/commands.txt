@@ -1,0 +1,16 @@
+python -m pip install -r requirements.txt
+
+
+## Python package path
+export PYTHONPATH="$PWD/src"
+python -c "import cybermlops; print('Package import successful')"
+
+
+## Run model training
+python -m cybermlops.models.train
+
+## open the two charts from Git Bash
+explorer.exe artifacts/models/v1.0.0/isolation_forest_confusion_matrix.png
+explorer.exe artifacts/models/v1.0.0/autoencoder_confusion_matrix.png
+
+cat artifacts/models/v1.0.0/metrics.json
