@@ -1,0 +1,14 @@
+{
+  "anomaly_fraction": 0.1,
+  "duration_seconds": 60,
+  "event_rate": 5,
+  "scenario": "mixed",
+  "schema_version": "1.0",
+  "seed": 42,
+  "test_file": "test.csv",
+  "test_rows": 300,
+  "test_seed": 43,
+  "train_file": "train.csv",
+  "train_rows": 300,
+  "train_seed": 42
+}
