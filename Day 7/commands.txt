@@ -1,0 +1,45 @@
+python -m pip install -r requirements.txt
+
+
+## Python package path
+export PYTHONPATH="$PWD/src"
+python -c "import cybermlops; print('Package import successful')"
+
+
+## Run model training
+python -m cybermlops.models.train
+
+## open the two charts from Git Bash
+explorer.exe artifacts/models/v1.0.0/isolation_forest_confusion_matrix.png
+explorer.exe artifacts/models/v1.0.0/autoencoder_confusion_matrix.png
+
+cat artifacts/models/v1.0.0/metrics.json
+
+
+## Day 7
+
+# Install the dependencies
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+
+# Verify the installed MLflow version:
+python -c "import mlflow; print('MLflow version:', mlflow.__version__)"
+
+# Configure the Python import path
+export PYTHONPATH="$PWD/src"
+
+# Verify the registry package
+python -c "import cybermlops.registry; print('Registry package import successful')"
+
+
+# Run the code
+python -m cybermlops.registry.register_models
+
+# Validate the registered models
+python -m cybermlops.registry.validate_models
+
+# Promote the approved model
+python -m cybermlops.registry.promote_model
+
+# Load the approved model and run inference
+python -m cybermlops.registry.load_approved_model

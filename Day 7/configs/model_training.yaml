@@ -1,0 +1,37 @@
+data:
+  train_path: data/generated/v1.0.0/train.csv
+  test_path: data/generated/v1.0.0/test.csv
+
+
+features:
+  - destination_port           # Network port receiving the connection, such as HTTP or HTTPS.
+  - bytes_transferred          # Amount of data transferred during the network activity.
+  - connection_count           # Number of network connections made by the source.
+  - failed_logins              # Number of unsuccessful login attempts.
+  - api_requests_per_minute    # Number of API requests made per minute.
+
+
+
+training:
+  random_state: 42              # Ensures repeatable results across training runs.
+  calibration_fraction: 0.20    # Reserves 20% of normal training data to calibrate the anomaly threshold.
+  threshold_percentile: 95     # Uses the 95th percentile of calibration scores as the anomaly threshold.
+
+isolation_forest:
+  n_estimators: 100             # Builds 100 decision trees to identify unusual data points.
+  max_samples: auto             # Automatically selects the number of samples used by each tree.
+  random_state: 42              # Makes the random sampling and tree creation reproducible.
+
+autoencoder:
+  hidden_layer_sizes:           # Defines the neural network's hidden layer structure.
+    - 8                         # First hidden layer: 8 neurons.
+    - 3                         # Bottleneck layer: 3 neurons, compressing the input features.
+    - 8                         # Final hidden layer: 8 neurons, reconstructing the input.
+  max_iter: 500                 # Allows up to 500 training iterations.
+  learning_rate_init: 0.001     # Sets the initial learning rate for adjusting network weights.
+  alpha: 0.001                  # Applies L2 regularization to help prevent overfitting.
+  random_state: 42              # Makes the neural network's initial weights reproducible.
+
+
+output:
+  directory: artifacts/models/v1.0.0

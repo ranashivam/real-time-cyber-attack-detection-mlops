@@ -1,0 +1,7 @@
+# Defaults for the synthetic security telemetry generator.
+event_rate: 5                         # generate five events per simulated second.
+duration_seconds: 60                  # simulate a 60-second period.
+seed: 42                              # use a reproducible random seed.
+scenario: mixed                       # distribute anomalous test events across the supported anomaly patterns.
+anomaly_fraction: 0.10                # select 10% of test records as anomalous.
+output_dir: data/generated/v1.0.0     # specify where the generated files should be saved.
