@@ -32,6 +32,12 @@ export PYTHONPATH="$PWD/src"
 python -c "import cybermlops.registry; print('Registry package import successful')"
 
 
+# train model
+export PYTHONPATH="$PWD/src"
+python -m cybermlops.models.train
+python -m cybermlops.tracking.mlflow_tracking
+
+
 # Run the code
 python -m cybermlops.registry.register_models
 
