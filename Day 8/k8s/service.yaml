@@ -1,0 +1,18 @@
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: cyber-attack-inference-service
+
+spec:
+  type: ClusterIP
+
+  selector:
+    app: cyber-attack-inference
+
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080

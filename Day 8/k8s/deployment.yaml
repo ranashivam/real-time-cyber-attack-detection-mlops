@@ -1,0 +1,79 @@
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: cyber-attack-inference
+  labels:
+    app: cyber-attack-inference
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: cyber-attack-inference
+
+  template:
+    metadata:
+      labels:
+        app: cyber-attack-inference
+
+    spec:
+      containers:
+        - name: inference-api
+
+          image: cyber-attack-inference:v1.0.1
+
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+
+            limits:
+              cpu: "500m"
+              memory: "768Mi"
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+
+          volumeMounts:
+            - name: temporary-storage
+              mountPath: /tmp
+
+      volumes:
+        - name: temporary-storage
+          emptyDir:
+            sizeLimit: 64Mi
