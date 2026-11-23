@@ -1,0 +1,187 @@
+
+# ==========================================
+# STEP 1: Move into Day 8
+# ==========================================
+
+cd /d/real-time-cyber-attack-detection-mlops/Day\ 8
+
+
+# ==========================================
+# STEP 2: Export approved model Version 3
+# ==========================================
+
+python scripts/export_approved_model.py
+
+
+# ==========================================
+# STEP 3: Verify exported model
+# ==========================================
+
+ls -lh artifacts/model/approved_model.joblib
+
+
+# ==========================================
+# STEP 4: Build Docker image
+# ==========================================
+
+docker build -t cyber-attack-inference:v1.0.0 .
+
+
+# ==========================================
+# STEP 5: Verify Docker image
+# ==========================================
+
+docker images cyber-attack-inference
+
+
+# ==========================================
+# STEP 6: Run container locally
+# ==========================================
+
+docker run -d \
+  --name cyber-attack-inference-test \
+  -p 8080:8080 \
+  cyber-attack-inference:v1.0.0
+
+
+# ==========================================
+# STEP 7: Test local health endpoint
+# ==========================================
+
+curl http://localhost:8080/health
+
+
+# ==========================================
+# STEP 8: Test local prediction endpoint
+# ==========================================
+
+curl -X POST http://localhost:8080/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "features": {
+      "destination_port": 443,
+      "bytes_transferred": 1200,
+      "connection_count": 5,
+      "failed_logins": 0,
+      "api_requests_per_minute": 20
+    }
+  }'
+
+
+# ==========================================
+# STEP 9: Check container logs
+# ==========================================
+
+docker logs cyber-attack-inference-test
+
+
+# ==========================================
+# STEP 10: Stop and remove test container
+# ==========================================
+
+docker stop cyber-attack-inference-test
+
+docker rm cyber-attack-inference-test
+
+
+# ==========================================
+# STEP 11: Check kind cluster
+# ==========================================
+
+kind get clusters
+
+kubectl get nodes
+
+
+# ==========================================
+# STEP 12: Load image into kind
+# ==========================================
+
+kind load docker-image cyber-attack-inference:v1.0.0
+
+
+# ==========================================
+# STEP 13: Apply Kubernetes Deployment
+# ==========================================
+
+kubectl apply -f k8s/deployment.yaml
+
+
+# ==========================================
+# STEP 14: Apply Kubernetes Service
+# ==========================================
+
+kubectl apply -f k8s/service.yaml
+
+
+# ==========================================
+# STEP 15: Check Deployment
+# ==========================================
+
+kubectl get deployments
+
+
+# ==========================================
+# STEP 16: Check Pods
+# ==========================================
+
+kubectl get pods -o wide
+
+
+# ==========================================
+# STEP 17: Check Services
+# ==========================================
+
+kubectl get services
+
+
+# ==========================================
+# STEP 18: Check application logs
+# ==========================================
+
+kubectl logs deployment/cyber-attack-inference
+
+
+# ==========================================
+# STEP 19: Inspect Kubernetes events
+# ==========================================
+
+kubectl get events --sort-by=.metadata.creationTimestamp
+
+
+# ==========================================
+# STEP 20: Forward Service port
+# ==========================================
+
+kubectl port-forward service/cyber-attack-inference-service 8080:80
+
+
+# ==========================================
+# STEP 21: Test Kubernetes health endpoint
+# ==========================================
+
+curl http://localhost:8080/health
+
+
+# ==========================================
+# STEP 22: Test Kubernetes prediction endpoint
+# ==========================================
+
+curl -X POST http://localhost:8080/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "features": {
+      "destination_port": 443,
+      "bytes_transferred": 1200,
+      "connection_count": 5,
+      "failed_logins": 0,
+      "api_requests_per_minute": 20
+    }
+  }'
+
+
+# ==========================================
+# STEP 23: Final verification
+# ==========================================
+
+kubectl get all
