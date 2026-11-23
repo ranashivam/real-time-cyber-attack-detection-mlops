@@ -1,0 +1,54 @@
+# ==========================================
+# DAY 9 - FASTAPI MODEL INFERENCE SERVICE
+# ==========================================
+
+# 1. Navigate to the main project directory
+cd /d/real-time-cyber-attack-detection-mlops
+
+# 2. Create the Day 9 folders
+mkdir -p "Day 9/app"
+mkdir -p "Day 9/artifacts/model"
+
+# 3. Copy the approved model from Day 8
+cp "Day 8/artifacts/model/approved_model.joblib" "Day 9/artifacts/model/approved_model.joblib"
+
+# 4. Navigate to Day 9
+cd "Day 9"
+
+# 5. Verify the approved model exists
+ls -lh artifacts/model/
+
+# 6. Verify Python version
+python --version
+
+# 7. Check FastAPI and Uvicorn availability
+python -c "import fastapi, uvicorn; print('FastAPI:', fastapi.__version__); print('Uvicorn:', uvicorn.__version__)"
+
+# 8. If FastAPI or Uvicorn is missing, install only these packages
+# Run this command only if the previous check fails
+python -m pip install fastapi uvicorn
+
+# 9. Verify the existing ML dependencies
+python -c "import numpy, sklearn, joblib; print('NumPy:', numpy.__version__); print('Scikit-learn:', sklearn.__version__); print('Joblib:', joblib.__version__)"
+
+# 10. Start the FastAPI application
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+# ==========================================
+# OPEN THESE URLS IN YOUR BROWSER
+# ==========================================
+
+# Swagger UI documentation
+# http://127.0.0.1:8000/docs
+
+# Health endpoint
+# http://127.0.0.1:8000/health
+
+# Readiness endpoint
+# http://127.0.0.1:8000/ready
+
+# ==========================================
+# STOP THE APPLICATION
+# ==========================================
+
+# Press CTRL+C in the terminal running Uvicorn.

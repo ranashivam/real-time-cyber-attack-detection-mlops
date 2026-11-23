@@ -1,0 +1,113 @@
+# Test 1 — Normal activity
+
+{
+  "features": {
+    "destination_port": 443,
+    "bytes_transferred": 1200,
+    "connection_count": 5,
+    "failed_logins": 0,
+    "api_requests_per_minute": 20
+  }
+}
+
+# Expected Output
+
+{
+  "prediction": "NORMAL",
+  "is_anomaly": false,
+  "anomaly_score": 0.9054298670852405,
+  "threshold": 1.316508753136059
+}
+
+# ============================================================== #
+# ============================================================== #
+
+# Test 2 — Suspicious network activity
+
+{
+  "features": {
+    "destination_port": 23,
+    "bytes_transferred": 900000,
+    "connection_count": 150,
+    "failed_logins": 25,
+    "api_requests_per_minute": 1200
+  }
+}
+
+# ============================================================== #
+# ============================================================== #
+
+# Test 3 — Missing required feature
+
+{
+  "features": {
+    "destination_port": 443,
+    "bytes_transferred": 1200,
+    "connection_count": 5,
+    "api_requests_per_minute": 20
+  }
+}
+
+# Expected result:
+# - HTTP 422 Unprocessable Entity
+# - Missing failed_logins field.
+
+# ============================================================== #
+# ============================================================== #
+
+# Test 4 — Incorrect data type
+
+{
+  "features": {
+    "destination_port": "invalid_port",
+    "bytes_transferred": 1200,
+    "connection_count": 5,
+    "failed_logins": 0,
+    "api_requests_per_minute": 20
+  }
+}
+
+# Expected result:
+# - HTTP 422 Unprocessable Entity
+# - Invalid integer value for destination_port.
+
+# ============================================================== #
+# ============================================================== #
+
+
+# Test 5 — Boundary values (valid request)
+
+{
+  "features": {
+    "destination_port": 0,
+    "bytes_transferred": 0,
+    "connection_count": 0,
+    "failed_logins": 0,
+    "api_requests_per_minute": 0
+  }
+}
+
+# Expected result: The request passes schema validation and reaches the model.
+# The prediction itself depends on the model.
+
+# ============================================================== #
+# ============================================================== #
+
+# Test 6 — Invalid destination port
+
+{
+  "features": {
+    "destination_port": 70000,
+    "bytes_transferred": 1200,
+    "connection_count": 5,
+    "failed_logins": 0,
+    "api_requests_per_minute": 20
+  }
+}
+
+# Expected result:
+# - HTTP 422 Unprocessable Entity
+# - Destination port exceeds the permitted maximum of 65535.
+
+# ============================================================== #
+# ============================================================== #
